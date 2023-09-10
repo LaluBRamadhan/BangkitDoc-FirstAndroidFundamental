@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SubmissionAwalFundamental</string>
+    <string name="searchbar_hint">Search</string>
+    <string name="activity">Activity</string>
+    <string name="tab_text_1">Follower</string>
+    <string name="tab_text_2">Following</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fragment_follower">Ini fragment follower</string>
+    <string name="fragment_following">Ini fragment following</string>
+</resources>
