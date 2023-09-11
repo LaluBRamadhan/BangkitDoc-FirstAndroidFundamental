@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.code.submissionawalfundamental.data.response.ItemsItem
 import com.code.submissionawalfundamental.databinding.ItemRowBinding
-import com.code.submissionawalfundamental.ui.activity.DetailProfile
+import com.code.submissionawalfundamental.ui.activity.DetailProfileActivity
 
 class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
 
@@ -28,7 +28,7 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
 
             //event ketika salah satu item di klik
             itemView.setOnClickListener{
-                val intent = Intent(itemView.context, DetailProfile::class.java)
+                val intent = Intent(itemView.context, DetailProfileActivity::class.java)
                 intent.putExtra(EXTRA_NAME, item.login)
                 Log.e("Login", "bind: ${item.login}", )
                 itemView.context.startActivity(intent)
@@ -57,15 +57,4 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
         notifyDataSetChanged()
     }
 
-//    companion object {
-//        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemsItem>() {
-//            override fun areItemsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean {
-//                return oldItem == newItem
-//            }
-//
-//            override fun areContentsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean {
-//                return oldItem == newItem
-//            }
-//        }
-//    }
 }

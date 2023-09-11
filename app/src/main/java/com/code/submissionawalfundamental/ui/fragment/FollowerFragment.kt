@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.code.submissionawalfundamental.databinding.FragmentFollowerBinding
-import com.code.submissionawalfundamental.ui.activity.DetailProfile
+import com.code.submissionawalfundamental.ui.activity.DetailProfileActivity
 import com.code.submissionawalfundamental.ui.adapter.GithubAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.FollowerViewModel
 
@@ -25,7 +25,7 @@ class FollowerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val argument = arguments
-        val username = argument?.getString(DetailProfile.EXTRA_NAME).toString()
+        val username = argument?.getString(DetailProfileActivity.EXTRA_NAME).toString()
 
         _binding = FragmentFollowerBinding.inflate(inflater, container, false)
 
@@ -49,12 +49,11 @@ class FollowerFragment : Fragment() {
         return binding.root
     }
 
-    private fun showLoading(isLoading: Boolean){
-        if(!isLoading){
-            binding.progressBar.visibility = View.INVISIBLE
-        }else{
-            binding.progressBar.visibility = View.VISIBLE
-        }
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
 

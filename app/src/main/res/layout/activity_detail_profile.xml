@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context=".ui.activity.DetailProfile"
+        tools:context=".ui.activity.DetailProfileActivity"
         >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgProfileDetail"

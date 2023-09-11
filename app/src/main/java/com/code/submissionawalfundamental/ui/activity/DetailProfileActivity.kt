@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class DetailProfile : AppCompatActivity() {
+class DetailProfileActivity : AppCompatActivity() {
 
     companion object {
         @StringRes
@@ -53,7 +53,7 @@ class DetailProfile : AppCompatActivity() {
             showLoading(it)
         }
 
-        val sectionPagerAdapter = SectionsPagerAdapter(this@DetailProfile, bundle)
+        val sectionPagerAdapter = SectionsPagerAdapter(this@DetailProfileActivity, bundle)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
@@ -70,17 +70,11 @@ class DetailProfile : AppCompatActivity() {
             tvDetailName.text = githubDetail.name
             tvfollower.text = "${githubDetail.followers.toString()} Followers "
             tvfollowing.text = "${githubDetail.following.toString()} Following"
-            Glide.with(this@DetailProfile)
+            Glide.with(this@DetailProfileActivity)
                 .load(githubDetail.avatarUrl)
                 .into(binding.imgProfileDetail)
         }
     }
-    private fun showLoading(isLoading: Boolean){
-        if(!isLoading){
-            binding.progressBar.visibility = View.INVISIBLE
-        }else{
-            binding.progressBar.visibility = View.VISIBLE
-        }
-    }
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
 }

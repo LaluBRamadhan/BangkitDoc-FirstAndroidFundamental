@@ -63,11 +63,5 @@ class MainActivity : AppCompatActivity() {
         binding.rvItem.adapter = adapter
     }
 
-    private fun showLoading(isLoading: Boolean){
-        if(!isLoading){
-            binding.progressBar.visibility = View.INVISIBLE
-        }else{
-            binding.progressBar.visibility = View.VISIBLE
-        }
-    }
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 }
