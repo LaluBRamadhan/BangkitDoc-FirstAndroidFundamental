@@ -14,6 +14,9 @@ import com.code.submissionawalfundamental.ui.activity.DetailProfile
 class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
 
     private var listItem: List<ItemsItem> = emptyList()
+    companion object{
+        const val EXTRA_NAME = "extra"
+    }
 
     class ListViewHolder(private val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: ItemsItem){
@@ -26,7 +29,7 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
             //event ketika salah satu item di klik
             itemView.setOnClickListener{
                 val intent = Intent(itemView.context, DetailProfile::class.java)
-                intent.putExtra("user", item.login)
+                intent.putExtra(EXTRA_NAME, item.login)
                 Log.e("Login", "bind: ${item.login}", )
                 itemView.context.startActivity(intent)
             }
@@ -46,8 +49,6 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
        val user = listItem[position]
         holder.bind(user)
-
-
     }
 
     @SuppressLint("NotifyDataSetChanged")

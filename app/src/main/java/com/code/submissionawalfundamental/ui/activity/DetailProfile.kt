@@ -1,6 +1,7 @@
 package com.code.submissionawalfundamental.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.code.submissionawalfundamental.R
 import com.code.submissionawalfundamental.data.response.DetailUserResponse
 import com.code.submissionawalfundamental.databinding.ActivityDetailProfileBinding
-import com.code.submissionawalfundamental.ui.adapter.SectionPagerAdapter
+import com.code.submissionawalfundamental.ui.adapter.SectionsPagerAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -23,17 +24,22 @@ class DetailProfile : AppCompatActivity() {
             R.string.tab_text_1,
             R.string.tab_text_2
         )
+        const val EXTRA_NAME = "extra"
+
     }
 
     private lateinit var binding: ActivityDetailProfileBinding
     private val detailViewModel by viewModels<DetailViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val username = intent.getStringExtra("user")
+        val username = intent.getStringExtra(EXTRA_NAME)
+        val bundle = Bundle()
+        bundle.putString(EXTRA_NAME,"$username")
 
         if (username != null) {
             detailViewModel.githubDetail(username)
@@ -43,7 +49,11 @@ class DetailProfile : AppCompatActivity() {
             setDetailData(githubDetail)
         }
 
-        val sectionPagerAdapter = SectionPagerAdapter(this@DetailProfile)
+        detailViewModel.isLoading.observe(this){
+            showLoading(it)
+        }
+
+        val sectionPagerAdapter = SectionsPagerAdapter(this@DetailProfile, bundle)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
@@ -64,7 +74,13 @@ class DetailProfile : AppCompatActivity() {
                 .load(githubDetail.avatarUrl)
                 .into(binding.imgProfileDetail)
         }
-
+    }
+    private fun showLoading(isLoading: Boolean){
+        if(!isLoading){
+            binding.progressBar.visibility = View.INVISIBLE
+        }else{
+            binding.progressBar.visibility = View.VISIBLE
+        }
     }
 
 }

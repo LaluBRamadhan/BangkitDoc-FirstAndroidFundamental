@@ -39,7 +39,11 @@ class FollowerViewModel: ViewModel() {
                 _isLoading.value = false
                 Log.e("Fail", "onFailure: ${t.message.toString()}", )
             }
-
         })
     }
+
+    fun listFollower(): LiveData<List<ItemsItem>>{
+        return followerDetail
+    }
+
 }
