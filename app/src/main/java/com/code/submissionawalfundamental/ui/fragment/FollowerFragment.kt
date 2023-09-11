@@ -17,7 +17,6 @@ import com.code.submissionawalfundamental.ui.viewmodel.FollowerViewModel
 class FollowerFragment : Fragment() {
     private lateinit var viewModel: FollowerViewModel
     private lateinit var adapter: GithubAdapter
-    private lateinit var username: String
     private var _binding: FragmentFollowerBinding? = null
     private val binding get() = _binding!!
 
@@ -31,7 +30,7 @@ class FollowerFragment : Fragment() {
 
         _binding = FragmentFollowerBinding.inflate(inflater, container, false)
 
-        val linearLayout = LinearLayoutManager(this.context)
+        val linearLayout = LinearLayoutManager(requireActivity())
         binding.rvFollower.layoutManager = linearLayout
 
         adapter = GithubAdapter()
