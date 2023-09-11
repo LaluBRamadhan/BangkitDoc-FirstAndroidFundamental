@@ -10,32 +10,31 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FollowerViewModel: ViewModel() {
-    private val _followerDetail = MutableLiveData<List<ItemsItem>>()
-    val followerDetail: LiveData<List<ItemsItem>> = _followerDetail
+class FollowingViewModel: ViewModel() {
+    private val _followingDetail = MutableLiveData<List<ItemsItem>>()
+    val followingDetal: LiveData<List<ItemsItem>> = _followingDetail
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
 
-    fun getFollower(username: String){
+    fun getFollowing(username: String){
         _isLoading.value = true
-
-        val client = ApiConfig.getApiService().getFollowers(username)
+        val client = ApiConfig.getApiService().getFollowing(username)
         client.enqueue(object : Callback<List<ItemsItem>>{
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
                 response: Response<List<ItemsItem>>
             ) {
                 _isLoading.value = false
-                if(response.isSuccessful){
-                    _followerDetail.value = response.body()
-                    Log.e("kue", "onResponse: ${response.body()}", )
 
+                if (response.isSuccessful){
+                    _followingDetail.value = response.body()
                 }else{
                     Log.e("Fail", "onResponse: ${response.message()}", )
                 }
             }
+
             override fun onFailure(call: Call<List<ItemsItem>>, t: Throwable) {
                 _isLoading.value = false
                 Log.e("Fail", "onFailure: ${t.message.toString()}", )
@@ -43,8 +42,7 @@ class FollowerViewModel: ViewModel() {
         })
     }
 
-    fun listFollower(): LiveData<List<ItemsItem>>{
-        return followerDetail
+    fun listFollowing(): LiveData<List<ItemsItem>>{
+        return followingDetal
     }
-
 }

@@ -2,7 +2,6 @@ package com.code.submissionawalfundamental.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +24,8 @@ class FollowerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val args = arguments
-        val username = args?.getString(DetailProfile.EXTRA_NAME).toString()
+        val argument = arguments
+        val username = argument?.getString(DetailProfile.EXTRA_NAME).toString()
 
         _binding = FragmentFollowerBinding.inflate(inflater, container, false)
 
@@ -40,13 +39,22 @@ class FollowerFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowerViewModel::class.java)
         viewModel.getFollower(username)
-        Log.e("hello", "onCreateView: $username")
-
         viewModel.listFollower().observe(viewLifecycleOwner){
             adapter.submit(it)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner){
+            showLoading(it)
         }
         return binding.root
     }
 
+    private fun showLoading(isLoading: Boolean){
+        if(!isLoading){
+            binding.progressBar.visibility = View.INVISIBLE
+        }else{
+            binding.progressBar.visibility = View.VISIBLE
+        }
+    }
 }
 

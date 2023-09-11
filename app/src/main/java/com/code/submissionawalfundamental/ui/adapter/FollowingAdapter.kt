@@ -7,11 +7,11 @@ import com.bumptech.glide.Glide
 import com.code.submissionawalfundamental.data.response.ItemsItem
 import com.code.submissionawalfundamental.databinding.ItemRowBinding
 
-class FollowerAdapter: RecyclerView.Adapter<FollowerAdapter.ListViewHolder>() {
+class FollowingAdapter: RecyclerView.Adapter<FollowingAdapter.ListViewHolder>() {
 
     private var listItem: List<ItemsItem> = emptyList()
 
-    class ListViewHolder (private val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root){
+    class ListViewHolder(private val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ItemsItem) {
             binding.tvName.text = item.login
             Glide.with(binding.root.context)
@@ -25,12 +25,10 @@ class FollowerAdapter: RecyclerView.Adapter<FollowerAdapter.ListViewHolder>() {
         return ListViewHolder(binding)
     }
 
-
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FollowingAdapter.ListViewHolder, position: Int) {
         val item = listItem[position]
         holder.bind(item)
     }
 
     override fun getItemCount(): Int = listItem.size
-
 }
