@@ -30,7 +30,6 @@ class FollowerViewModel: ViewModel() {
                 _isLoading.value = false
                 if(response.isSuccessful){
                     _followerDetail.value = response.body()
-                    Log.e("kue", "onResponse: ${response.body()}", )
 
                 }else{
                     Log.e("Fail", "onResponse: ${response.message()}", )

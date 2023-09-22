@@ -1,5 +1,6 @@
 package com.code.submissionawalfundamental.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,8 +8,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.code.submissionawalfundamental.R
 import com.code.submissionawalfundamental.data.response.ItemsItem
 import com.code.submissionawalfundamental.databinding.ActivityMainBinding
+import com.code.submissionawalfundamental.ui.FavoriteActivity
 import com.code.submissionawalfundamental.ui.adapter.GithubAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
 import com.code.submissionawalfundamental.ui.viewmodel.MainViewModel
@@ -32,6 +35,24 @@ class MainActivity : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvItem.addItemDecoration(itemDecoration)
 
+        binding.searchBar.inflateMenu(R.menu.menu)
+        binding.searchBar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.menu1 -> {
+                    val intents = Intent(this@MainActivity, FavoriteActivity::class.java)
+                    startActivity(intents)
+                    true
+                }
+                R.id.menu2 -> {
+                    val intents = Intent(this@MainActivity, SettingActivity::class.java)
+                    startActivity(intents)
+                    true
+                }
+                else -> false
+            }
+
+        }
+
         with(binding) {
             searchView.setupWithSearchBar(searchBar)
             searchView
@@ -53,7 +74,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.isLoading.observe(this){
             showLoading(it)
         }
-
 
     }
 
