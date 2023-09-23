@@ -9,9 +9,12 @@
     android:gravity="center"
     tools:context=".ui.activity.SettingActivity">
 
-    <TextView
-        android:layout_width="match_parent"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_theme"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/activity" />
+        app:switchPadding="20dp"
+        android:text="@string/dark"
+        android:textSize="14sp"
+         />
 </LinearLayout>

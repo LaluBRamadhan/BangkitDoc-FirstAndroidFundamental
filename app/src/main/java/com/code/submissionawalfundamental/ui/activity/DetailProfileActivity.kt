@@ -12,6 +12,7 @@ import com.code.submissionawalfundamental.data.response.DetailUserResponse
 import com.code.submissionawalfundamental.databinding.ActivityDetailProfileBinding
 import com.code.submissionawalfundamental.ui.adapter.SectionsPagerAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -62,6 +63,8 @@ class DetailProfileActivity : AppCompatActivity() {
         }.attach()
         supportActionBar?.elevation = 0f
 
+        favoriteButton(binding.fab)
+
     }
 
     private fun setDetailData(githubDetail: DetailUserResponse){
@@ -76,5 +79,20 @@ class DetailProfileActivity : AppCompatActivity() {
         }
     }
     private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
+
+    fun favoriteButton(fab: FloatingActionButton){
+        var isFavorite = false
+
+        fab.setOnClickListener{
+            isFavorite = !isFavorite
+
+            val iconResource = if(isFavorite){
+                R.drawable.favorite_fill
+            }else{
+                R.drawable.favorite
+            }
+            fab.setImageResource(iconResource)
+        }
+    }
 
 }

@@ -3,21 +3,29 @@ package com.code.submissionawalfundamental.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.code.submissionawalfundamental.R
 import com.code.submissionawalfundamental.data.response.ItemsItem
 import com.code.submissionawalfundamental.databinding.ActivityMainBinding
-import com.code.submissionawalfundamental.ui.FavoriteActivity
+import com.code.submissionawalfundamental.databinding.ActivitySettingBinding
 import com.code.submissionawalfundamental.ui.adapter.GithubAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
 import com.code.submissionawalfundamental.ui.viewmodel.MainViewModel
+import com.code.submissionawalfundamental.ui.viewmodel.ThemeViewModel
+import com.code.submissionawalfundamental.ui.viewmodel.ThemeViewModelFactory
+import com.code.submissionawalfundamental.util.SettingPreferences
+import com.code.submissionawalfundamental.util.dataStore
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var themeBinding: ActivitySettingBinding
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel by viewModels<MainViewModel>()
     private val detailViewModel by viewModels<DetailViewModel>()
@@ -26,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        themeBinding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -67,6 +76,9 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
+        val switch = themeBinding.switchTheme
+        switchTheme(switch)
+
         mainViewModel.githubResponse.observe(this){githubuser->
             setDataGithub(githubuser)
         }
@@ -74,7 +86,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.isLoading.observe(this){
             showLoading(it)
         }
-
     }
 
     fun setDataGithub(user: List<ItemsItem>){
@@ -84,4 +95,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
+
+    //theme switch
+    private fun switchTheme(switch: SwitchMaterial){
+        val pref = SettingPreferences.getInstance(application.dataStore)
+        val themeViewModel = ViewModelProvider(this, ThemeViewModelFactory(pref)).get(
+            ThemeViewModel::class.java
+        )
+
+        themeViewModel.getThemeSettings().observe(this){isDarkModeActive: Boolean ->
+            if (isDarkModeActive){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                switch.isChecked = true
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                switch.isChecked = false
+            }
+        }
+
+        switch.setOnCheckedChangeListener{ _: CompoundButton?, checked: Boolean ->
+            themeViewModel.saveThemeSetting(checked)
+        }
+    }
 }

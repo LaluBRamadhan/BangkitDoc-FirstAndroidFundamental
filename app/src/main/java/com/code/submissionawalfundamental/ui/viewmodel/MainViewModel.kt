@@ -46,8 +46,7 @@ class MainViewModel: ViewModel() {
                 Log.e("FailedGetGithubUser", "onFailure: ${t.message.toString()}", )
             }
         })
-
-
     }
+
 
 }

@@ -1,7 +1,7 @@
-package com.code.submissionawalfundamental.ui
+package com.code.submissionawalfundamental.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.code.submissionawalfundamental.R
 
 class FavoriteActivity : AppCompatActivity() {
