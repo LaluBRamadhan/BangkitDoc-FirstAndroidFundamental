@@ -1,7 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-}
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+ }
 
 android {
     namespace = "com.code.submissionawalfundamental"
@@ -63,4 +65,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+    //latihan room
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation ("androidx.room:room-ktx:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    androidTestImplementation ("androidx.room:room-testing:2.5.2")
+    kapt ("androidx.room:room-compiler:2.5.2")
 }

@@ -47,12 +47,12 @@ class MainActivity : AppCompatActivity() {
         binding.searchBar.inflateMenu(R.menu.menu)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId){
-                R.id.menu1 -> {
+                R.id.favorite -> {
                     val intents = Intent(this@MainActivity, FavoriteActivity::class.java)
                     startActivity(intents)
                     true
                 }
-                R.id.menu2 -> {
+                R.id.setting -> {
                     val intents = Intent(this@MainActivity, SettingActivity::class.java)
                     startActivity(intents)
                     true
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setDataGithub(user: List<ItemsItem>){
+    private fun setDataGithub(user: List<ItemsItem>){
         val adapter = GithubAdapter()
         adapter.submit(user)
         binding.rvItem.adapter = adapter
@@ -99,9 +99,7 @@ class MainActivity : AppCompatActivity() {
     //theme switch
     private fun switchTheme(switch: SwitchMaterial){
         val pref = SettingPreferences.getInstance(application.dataStore)
-        val themeViewModel = ViewModelProvider(this, ThemeViewModelFactory(pref)).get(
-            ThemeViewModel::class.java
-        )
+        val themeViewModel = ViewModelProvider(this, ThemeViewModelFactory(pref))[ThemeViewModel::class.java]
 
         themeViewModel.getThemeSettings().observe(this){isDarkModeActive: Boolean ->
             if (isDarkModeActive){

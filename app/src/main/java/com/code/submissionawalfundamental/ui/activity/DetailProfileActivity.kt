@@ -1,5 +1,6 @@
 package com.code.submissionawalfundamental.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -9,12 +10,17 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.code.submissionawalfundamental.R
 import com.code.submissionawalfundamental.data.response.DetailUserResponse
+import com.code.submissionawalfundamental.database.FavoriteDatabase
+import com.code.submissionawalfundamental.database.FavoriteUser
 import com.code.submissionawalfundamental.databinding.ActivityDetailProfileBinding
 import com.code.submissionawalfundamental.ui.adapter.SectionsPagerAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class DetailProfileActivity : AppCompatActivity() {
@@ -26,21 +32,23 @@ class DetailProfileActivity : AppCompatActivity() {
             R.string.tab_text_2
         )
         const val EXTRA_NAME = "extra"
+        const val EXTRA_URL = "url"
 
     }
 
     private lateinit var binding: ActivityDetailProfileBinding
     private val detailViewModel by viewModels<DetailViewModel>()
-
-
+    private var isFavorite: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val username = intent.getStringExtra(EXTRA_NAME)
+        val avatarUrl = intent.getStringExtra(EXTRA_URL)
         val bundle = Bundle()
         bundle.putString(EXTRA_NAME,"$username")
+        bundle.putString(EXTRA_URL, "$avatarUrl")
 
         if (username != null) {
             detailViewModel.githubDetail(username)
@@ -63,10 +71,25 @@ class DetailProfileActivity : AppCompatActivity() {
         }.attach()
         supportActionBar?.elevation = 0f
 
-        favoriteButton(binding.fab)
 
+        updateFabIcon(binding.fab, isFavorite)
+        binding.fab.setOnClickListener{
+            isFavorite = !isFavorite
+            if(isFavorite){
+                if(username != null && avatarUrl != null){
+                    val user = FavoriteUser(name = username, url = avatarUrl)
+                    saveToDatabase(user)
+                }
+            }else{
+                if(username != null){
+                    deleteUser(username)
+                }
+            }
+            updateFabIcon(binding.fab, isFavorite)
+        }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setDetailData(githubDetail: DetailUserResponse){
         binding.apply {
             tvDetailUsername.text = githubDetail.login
@@ -80,18 +103,29 @@ class DetailProfileActivity : AppCompatActivity() {
     }
     private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
-    fun favoriteButton(fab: FloatingActionButton){
-        var isFavorite = false
+    fun updateFabIcon(fab: FloatingActionButton, isFavorite: Boolean){
+        val iconResource = if (isFavorite) {
+            R.drawable.favorite_fill_black
+        } else {
+            R.drawable.favorite_black
+        }
+        fab.setImageResource(iconResource)
+    }
 
-        fab.setOnClickListener{
-            isFavorite = !isFavorite
+    private fun saveToDatabase(user: FavoriteUser){
+        val userDao = FavoriteDatabase.getDatabase(this).favoriteDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            userDao.insertUser(user)
+        }
+    }
 
-            val iconResource = if(isFavorite){
-                R.drawable.favorite_fill
-            }else{
-                R.drawable.favorite
+    private fun deleteUser(username: String){
+        val userDao = FavoriteDatabase.getDatabase(this).favoriteDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = userDao.getUserByUsername(username)
+            user?.let {
+                userDao.deleteUser(it)
             }
-            fab.setImageResource(iconResource)
         }
     }
 
