@@ -15,12 +15,12 @@ import com.code.submissionawalfundamental.database.FavoriteUser
 import com.code.submissionawalfundamental.databinding.ActivityDetailProfileBinding
 import com.code.submissionawalfundamental.ui.adapter.SectionsPagerAdapter
 import com.code.submissionawalfundamental.ui.viewmodel.DetailViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class DetailProfileActivity : AppCompatActivity() {
@@ -33,12 +33,14 @@ class DetailProfileActivity : AppCompatActivity() {
         )
         const val EXTRA_NAME = "extra"
         const val EXTRA_URL = "url"
+        const val EXTRA_ID = "id"
 
     }
 
     private lateinit var binding: ActivityDetailProfileBinding
     private val detailViewModel by viewModels<DetailViewModel>()
     private var isFavorite: Boolean = false
+    private var id = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailProfileBinding.inflate(layoutInflater)
@@ -46,9 +48,12 @@ class DetailProfileActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra(EXTRA_NAME)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
+        id = intent.getIntExtra(EXTRA_ID, 0)
         val bundle = Bundle()
         bundle.putString(EXTRA_NAME,"$username")
         bundle.putString(EXTRA_URL, "$avatarUrl")
+        bundle.putInt(EXTRA_ID, id)
+
 
         if (username != null) {
             detailViewModel.githubDetail(username)
@@ -72,20 +77,25 @@ class DetailProfileActivity : AppCompatActivity() {
         supportActionBar?.elevation = 0f
 
 
-        updateFabIcon(binding.fab, isFavorite)
+        if (username != null) {
+            getFavoriteUser(username)
+        }
+
         binding.fab.setOnClickListener{
             isFavorite = !isFavorite
             if(isFavorite){
                 if(username != null && avatarUrl != null){
+                    binding.fab.setImageResource(R.drawable.favorite_fill_black)
                     val user = FavoriteUser(name = username, url = avatarUrl)
                     saveToDatabase(user)
                 }
             }else{
                 if(username != null){
+                    binding.fab.setImageResource(R.drawable.favorite_black)
                     deleteUser(username)
                 }
             }
-            updateFabIcon(binding.fab, isFavorite)
+            binding.fab.isActivated = isFavorite
         }
     }
 
@@ -103,14 +113,7 @@ class DetailProfileActivity : AppCompatActivity() {
     }
     private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
-    fun updateFabIcon(fab: FloatingActionButton, isFavorite: Boolean){
-        val iconResource = if (isFavorite) {
-            R.drawable.favorite_fill_black
-        } else {
-            R.drawable.favorite_black
-        }
-        fab.setImageResource(iconResource)
-    }
+
 
     private fun saveToDatabase(user: FavoriteUser){
         val userDao = FavoriteDatabase.getDatabase(this).favoriteDao()
@@ -125,6 +128,22 @@ class DetailProfileActivity : AppCompatActivity() {
             val user = userDao.getUserByUsername(username)
             user?.let {
                 userDao.deleteUser(it)
+            }
+        }
+    }
+
+    private fun getFavoriteUser(username: String){
+        val userDao = FavoriteDatabase.getDatabase(this).favoriteDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            val getFavoriteUsericon = username.let { userDao.getUserByUsername(it) }
+            withContext(Dispatchers.Main){
+                if(getFavoriteUsericon!=null){
+                    binding.fab.setImageResource(R.drawable.favorite_fill_black)
+                    isFavorite = true
+                }else{
+                    binding.fab.setImageResource(R.drawable.favorite_black)
+                    isFavorite = false
+                }
             }
         }
     }

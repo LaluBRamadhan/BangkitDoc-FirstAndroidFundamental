@@ -23,5 +23,4 @@ interface FavoriteDao {
     @Delete
     fun deleteUser(user: FavoriteUser)
 
-
 }
