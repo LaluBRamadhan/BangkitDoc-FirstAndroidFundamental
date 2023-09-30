@@ -17,7 +17,6 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
     companion object{
         const val EXTRA_NAME = "extra"
         const val EXTRA_URL = "url"
-        const val EXTRA_ID = "id"
     }
 
     class ListViewHolder(private val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root){
@@ -33,10 +32,8 @@ class GithubAdapter: RecyclerView.Adapter<GithubAdapter.ListViewHolder>() {
                 val intent = Intent(itemView.context, DetailProfileActivity::class.java)
                 intent.putExtra(EXTRA_NAME, item.login)
                 intent.putExtra(EXTRA_URL, item.avatarUrl)
-                intent.getIntExtra(EXTRA_ID, item.id)
-                Log.e("Login", "bind: ${item.login}", )
-                Log.e("AvatarUrl", "bind: ${item.avatarUrl}", )
-                Log.e("kiwkiw", "bind: ${item.id} ", )
+                Log.i("Login", "data: ${item.login}", )
+                Log.i("AvatarUrl", "data: ${item.avatarUrl}", )
                 itemView.context.startActivity(intent)
             }
         }

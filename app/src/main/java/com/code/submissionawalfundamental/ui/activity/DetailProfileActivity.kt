@@ -33,14 +33,11 @@ class DetailProfileActivity : AppCompatActivity() {
         )
         const val EXTRA_NAME = "extra"
         const val EXTRA_URL = "url"
-        const val EXTRA_ID = "id"
-
     }
 
     private lateinit var binding: ActivityDetailProfileBinding
     private val detailViewModel by viewModels<DetailViewModel>()
     private var isFavorite: Boolean = false
-    private var id = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailProfileBinding.inflate(layoutInflater)
@@ -48,11 +45,9 @@ class DetailProfileActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra(EXTRA_NAME)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
-        id = intent.getIntExtra(EXTRA_ID, 0)
         val bundle = Bundle()
         bundle.putString(EXTRA_NAME,"$username")
         bundle.putString(EXTRA_URL, "$avatarUrl")
-        bundle.putInt(EXTRA_ID, id)
 
 
         if (username != null) {
@@ -137,12 +132,12 @@ class DetailProfileActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val getFavoriteUsericon = username.let { userDao.getUserByUsername(it) }
             withContext(Dispatchers.Main){
-                if(getFavoriteUsericon!=null){
+                isFavorite = if(getFavoriteUsericon!=null){
                     binding.fab.setImageResource(R.drawable.favorite_fill_black)
-                    isFavorite = true
+                    true
                 }else{
                     binding.fab.setImageResource(R.drawable.favorite_black)
-                    isFavorite = false
+                    false
                 }
             }
         }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         themeBinding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         val layoutManager = LinearLayoutManager(this)
         binding.rvItem.layoutManager = layoutManager
 
@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-
         }
 
         with(binding) {
@@ -103,9 +102,11 @@ class MainActivity : AppCompatActivity() {
 
         themeViewModel.getThemeSettings().observe(this){isDarkModeActive: Boolean ->
             if (isDarkModeActive){
+                binding.searchBar.menu.findItem(R.id.favorite).icon = ContextCompat.getDrawable(this,R.drawable.favorite_fill_white)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 switch.isChecked = true
             }else{
+                binding.searchBar.menu.findItem(R.id.favorite).icon = ContextCompat.getDrawable(this, R.drawable.favorite_fill_black)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 switch.isChecked = false
             }
